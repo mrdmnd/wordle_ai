@@ -6,12 +6,18 @@ import solver
 # Compute the (integer-coded) feedback value for a guess/answer pair.
 def Feedback(guess, answer):
     feedback = 0
+    answer_els, answer_counts = np.unique([letter for letter in answer], return_counts=True)
+    answer_freq = dict(zip(answer_els, answer_counts))
     for i, g in enumerate(guess):
         offset = 3**i
         if g == answer[i]:
             feedback += 2 * offset
-        elif g in answer:
+            answer_freq[g] -= 1
+    for i, g in enumerate(guess):
+        offset = 3**i
+        if g != answer[i] and g in answer and answer_freq[g] > 0:
             feedback += 1 * offset
+            answer_freq[g] -= 1
     return feedback
 
 
